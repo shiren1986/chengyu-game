@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设置界面测试</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #game-container {
+            position: relative;
+            width: 800px;
+            height: 600px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+    </div>
+
+    <script type="module">
+        import { SettingsManager } from './js/settings_manager.js';
+        import { AudioManager } from './js/audio_manager.js';
+
+        class TestApp {
+            constructor() {
+                this.canvas = document.getElementById('game-canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.canvas.width = 800;
+                this.canvas.height = 600;
+
+                // 初始化设置管理器
+                this.settingsManager = new SettingsManager(null);
+                
+                // 绑定点击事件
+                this.canvas.addEventListener('click', this.handleClick.bind(this));
+                
+                // 开始渲染循环
+                this.render();
+            }
+
+            render() {
+                // 清空画布
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // 绘制设置界面
+                this.settingsManager.draw(this.ctx);
+                
+                // 继续渲染循环
+                requestAnimationFrame(this.render.bind(this));
+            }
+
+            handleClick(event) {
+                const rect = this.canvas.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+                
+                const result = this.settingsManager.handleClick(x, y);
+                if (result) {
+                    console.log('点击结果:', result);
+                }
+            }
+        }
+
+        // 页面加载完成后初始化
+        window.addEventListener('load', () => {
+            new TestApp();
+        });
+    </script>
+</body>
+</html> 

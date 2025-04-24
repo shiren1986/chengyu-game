@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>诗词名句学习字典</title>
+    <link rel="stylesheet" href="css/style.css?v=1.0.1">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/favicon.ico">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+    </div>
+
+    <script type="module">
+        // 添加版本号防止缓存
+        const version = '1.0.3';
+        const modules = [
+            './js/constants.js',
+            './js/config_loader.js',
+            './js/data_storage.js',
+            './js/audio_manager.js',
+            './js/settings_manager.js',
+            './js/level_manager.js',
+            './js/ui_manager.js',
+            './js/game_manager.js'
+        ];
+
+        // 动态导入所有模块
+        async function loadModules() {
+            try {
+                const GameManager = (await import(`${modules[7]}?v=${version}`)).GameManager;
+                const gameManager = new GameManager();
+                await gameManager.initialize();
+            } catch (error) {
+                console.error('游戏初始化失败:', error);
+                // 添加更详细的错误信息
+                console.error('错误详情:', error.stack);
+            }
+        }
+
+        window.addEventListener('load', loadModules);
+    </script>
+</body>
+</html> 
